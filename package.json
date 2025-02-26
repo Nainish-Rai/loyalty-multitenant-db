@@ -1,0 +1,37 @@
+{
+  "name": "loyalty-multitenant-db",
+  "version": "1.0.0",
+  "main": "dist/server.js",
+  "scripts": {
+    "start": "node dist/server.js",
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "build": "tsc",
+    "db:push": "prisma db push",
+    "db:seed": "ts-node prisma/seed.ts",
+    "prisma:generate": "prisma generate",
+    "postinstall": "prisma generate"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@prisma/client": "^5.x",
+    "bcrypt": "^5.x",
+    "cors": "^2.x",
+    "dotenv": "^16.x",
+    "express": "^4.x"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.17.19",
+    "prisma": "^5.x",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.7.3"
+  }
+}

@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Company {
+  id            String   @id @default(uuid())
+  companyUID    String   @unique
+  name          String   @db.VarChar(255)
+  email         String   @unique @db.VarChar(255)
+  phone         String   @unique @db.VarChar(20)
+  password      String
+  industry      String?  @db.VarChar(100)
+  website       String?  @db.VarChar(255)
+  address       String?  @db.Text
+  description   String?  @db.Text
+  parentCompany String?  @db.VarChar(255)
+  adminName     String?  @db.VarChar(255)
+  jobTitle      String?  @db.VarChar(100)
+  primaryColor  String?  @db.VarChar(7)
+  secondaryColor String? @db.VarChar(7)
+  logo          String?  @db.Text
+  socialMedia   String[] @db.Text
+  users         User[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("companies")
+}
+
+model User {
+  id          String   @id @default(uuid())
+  userID      String   @unique
+  name        String?  @db.VarChar(255)
+  email       String   @unique @db.VarChar(255)
+  phone       String?  @unique @db.VarChar(20)
+  companyId   String
+  company     Company  @relation(fields: [companyId], references: [id])
+  totalPoints Float    @default(0)
+  createdAt   DateTime @default(now())
+  transactions Transaction[]
+
+  @@map("users")
+}
+
+model Transaction {
+  id            String   @id @default(uuid())
+  transactionID String   @unique
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  dateTime      DateTime? @default(now())
+  points        Float
+  validUntil    DateTime?
+  available     Float?   @default(0)
+
+  @@map("transactions")
+  @@index([userId])
+}
