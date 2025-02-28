@@ -8,8 +8,7 @@ datasource db {
 }
 
 model Company {
-  id            String   @id @default(uuid())
-  companyUID    String   @unique
+  id            String   @id  @unique  @default(uuid())
   name          String   @db.VarChar(255)
   email         String   @unique @db.VarChar(255)
   phone         String   @unique @db.VarChar(20)
@@ -27,36 +26,43 @@ model Company {
   socialMedia   String[] @db.Text
   users         User[]
   createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  updatedAt     DateTime @default(now())
 
   @@map("companies")
 }
 
 model User {
-  id          String   @id @default(uuid())
-  userID      String   @unique
+  id          String   @id   @unique @default(uuid())
   name        String?  @db.VarChar(255)
-  email       String   @unique @db.VarChar(255)
-  phone       String?  @unique @db.VarChar(20)
+  email       String   @db.VarChar(255)
+  phone       String?  @db.VarChar(20)
   companyId   String
   company     Company  @relation(fields: [companyId], references: [id])
   totalPoints Float    @default(0)
   createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
   transactions Transaction[]
-
+  // role
   @@map("users")
 }
 
+// try inheriting user properties to create customer, admin, super customer etc
+
+
 model Transaction {
-  id            String   @id @default(uuid())
-  transactionID String   @unique
+  id            String   @id @unique @default(uuid())
   userId        String
   user          User     @relation(fields: [userId], references: [id])
   dateTime      DateTime? @default(now())
+  updatedAt     DateTime? @default(now())
   points        Float
   validUntil    DateTime?
-  available     Float?   @default(0)
+  availablePoints     Float? @default(0)
 
   @@map("transactions")
   @@index([userId])
 }
+
+
+// todo create log tables for verification
+// consider changes if there is third party otp
